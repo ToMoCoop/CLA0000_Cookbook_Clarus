@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+
+require 'pg'
+conn = PG::Connection.new('<%= node['cookbook_clarus']['database']['host'] %>', 5432, nil, nil, '<%= node['cookbook_clarus']['database']['name'] %>', 'postgres', '<%= node['cookbook_clarus']['db_root_password'] %>')
+
+require 'bcrypt'
+include BCrypt
+
+subdomain, email = ENV['AUTHD_ACCOUNT'].split('-', 2)
+
+res = conn.exec_params("SELECT u.encrypted_password, u.id FROM users u LEFT JOIN account_users au ON au.user_id = u.id
+LEFT JOIN accounts a ON au.account_id = a.id WHERE a.subdomain LIKE $1 AND u.email LIKE $2", [subdomain, email] )
+
+encrypted_password = res.getvalue(0,0)
+user_id = res.getvalue(0,1)
+
+salt = encrypted_password[0...29]
+authd_password = BCrypt::Engine.hash_secret(ENV['AUTHD_PASSWORD'], salt)
+
+if encrypted_password == authd_password
+  target_dir = "<%= node['cookbook_clarus']['ftp_root']%>/<%= node['cookbook_clarus']['rails_env'] %>/#{user_id}/uploads/#{subdomain}"
+  unless Dir.exists?(target_dir)
+    Dir.mkdir target_dir
+    FileUtils.chown "<%= node['appbox']['deploy_user']%>", "<%= node['appbox']['apps_user']%>", target_dir
+  end
+  puts 'auth_ok:1'
+  puts 'uid:1002'
+  puts 'gid:1002'
+  puts 'dir:' + "#{target_dir}/./"
+else
+  puts 'auth_ok:0'
+end
+
+puts 'end'
