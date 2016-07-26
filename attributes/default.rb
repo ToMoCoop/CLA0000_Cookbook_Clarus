@@ -3,7 +3,6 @@ default['postgresql']['version'] = '9.3'
 default['cookbook_clarus']['appname'] = 'clarus'
 default['cookbook_clarus']['hostname'] = 'localhost'
 default['cookbook_clarus']['rails_env'] = 'production'
-default['cookbook_clarus']['nginx_config'] = {}
 default['cookbook_clarus']['install_db'] = true
 default['cookbook_clarus']['db_root_password'] = ''
 default['cookbook_clarus']['database']['host'] = 'localhost'
@@ -17,6 +16,7 @@ default['cookbook_clarus']['symlink_jshintrc'] = false
 default['cookbook_clarus']['nodejs']['version'] = '4.4.3'
 default['cookbook_clarus']['nodejs']['checksum'] = '8e67b95721aab7bd721179da2fe5dd97f9acc1306c15c9712ee103bcd6381638'
 
+default['cookbook_clarus']['ruby']['version'] = '2.0.0-p643'
 
 default['cookbook_clarus']['solr']['version'] = '4.10.4'
 default['cookbook_clarus']['solr']['url'] = "http://mirrors.ukfast.co.uk/sites/ftp.apache.org/lucene/solr/#{node['cookbook_clarus']['solr']['version']}/solr-#{node['cookbook_clarus']['solr']['version']}.tgz"
