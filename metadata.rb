@@ -12,6 +12,6 @@ recipe 'cookbook_clarus', 'The Clarus server cookbook, ready for the Clarus appl
   supports os
 end
 
-%w{appbox apt build-essential  database imagemagick java logrotate newrelic nginx postgresql rbenv redisio ruby_build sqlite unicorn}.each do |cb|
+%w{appbox apt build-essential  database imagemagick java logrotate newrelic nginx nodejs postgresql rbenv redisio ruby_build sqlite unicorn}.each do |cb|
   depends cb
 end
