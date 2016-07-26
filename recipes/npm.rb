@@ -12,11 +12,3 @@ node.set['nodejs']['source']['checksum'] = node['cookbook_clarus']['nodejs']['ch
 
 # Install npm itself
 include_recipe "nodejs::npm"
-
-# Install the packages that ember development requires
-nodejs_npm "bower" do
-end
-nodejs_npm "ember-cli" do
-end
-nodejs_npm "phantomjs" do
-end
