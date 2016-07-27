@@ -30,7 +30,7 @@ server {
   # allow clients to upload large files (if necessary)
   client_max_body_size 4G;
 
-  location <%= @rails_path %> {
+  location / {
     try_files /system/maintenance.html
               $uri $uri/index.html $uri.html
               @app;

@@ -41,7 +41,6 @@ module CookbookRackbox
         group     "root"
         variables(
           :rails_public_dir  => rails_public_dir,
-          :rails_path  => app["rails_path"],
           :log_dir     => node["nginx"]["log_dir"],
           :appname     => app["appname"],
           :hostname    => app["hostname"],
