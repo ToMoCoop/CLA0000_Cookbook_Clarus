@@ -13,6 +13,8 @@ default['cookbook_clarus']['symlink_node_modules'] = false
 default['cookbook_clarus']['symlink_tmp'] = false
 default['cookbook_clarus']['symlink_jshintrc'] = false
 
+default['cookbook_clarus']['nginx_config'] = {};
+
 default['cookbook_clarus']['nodejs']['version'] = '4.4.3'
 default['cookbook_clarus']['nodejs']['checksum'] = '8e67b95721aab7bd721179da2fe5dd97f9acc1306c15c9712ee103bcd6381638'
 

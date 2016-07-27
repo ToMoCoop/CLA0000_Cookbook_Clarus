@@ -31,6 +31,8 @@ app = {
   }
 }
 
+# Merge in the user configuration, if required.
+app['nginx_config'] = app['nginx_config'].merge(node['cookbook_clarus']['nginx_config'] || {})
 
 default_port = 10001
 rails_app_dir = ::File.join(node['appbox']['apps_dir'], app['appname'])
