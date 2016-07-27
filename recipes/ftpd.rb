@@ -1,6 +1,10 @@
 # Ftp services need PG system wide.
-gem_package "pg" do
-  action :install
+# Changed the way this installs as it appears it sometimes needs the
+# ARCHFLAGS settings (don't know why), so we have to run a command
+# rather than the gem_package method.
+execute 'install pg' do
+  command 'env ARCHFLAGS="-arch x86_64" gem install pg --no-ri --no-rdoc'
+  only_if { %x[gem which pg | grep 'pg'].empty? }
 end
 
 # Ftp services need bcrypt system wide.
