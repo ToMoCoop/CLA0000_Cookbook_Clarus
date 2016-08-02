@@ -13,14 +13,14 @@ gem_package "pusher-client" do
   action :install
 end
 
-remote_file '/tmp/pure-ftpd-1.0.39.tar.gz' do
+remote_file "/tmp/pure-ftpd-#{node['cookbook_clarus']['pure-ftpd']['version']}.tar.gz" do
   source node['cookbook_clarus']['pure-ftpd']['url']
 end
 
 bash 'Download Pure-FTPD' do
   code <<-EOH
-    sudo tar -C /tmp -xzf /tmp/pure-ftpd-1.0.39.tar.gz
-    cd /tmp/pure-ftpd-1.0.39
+    sudo tar -C /tmp -xzf /tmp/pure-ftpd-#{node['cookbook_clarus']['pure-ftpd']['version']}.tar.gz
+    cd /tmp/pure-ftpd-#{node['cookbook_clarus']['pure-ftpd']['version']}
     sudo ./configure --with-extauth
     sudo make
     sudo make install
