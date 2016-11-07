@@ -16,9 +16,9 @@ default['cookbook_clarus']['symlink_jshintrc'] = false
 default['cookbook_clarus']['nginx_config'] = {};
 
 default['cookbook_clarus']['nodejs']['version'] = '4.4.3'
-default['cookbook_clarus']['nodejs']['checksum'] = '8e67b95721aab7bd721179da2fe5dd97f9acc1306c15c9712ee103bcd6381638'
+default['cookbook_clarus']['nodejs']['checksum'] = '57499bb0b1b86080459d4066e3c138579a278b2d0b1f5b2f19e66c69b4e8433c'
 
-default['cookbook_clarus']['ruby']['version'] = '2.0.0-p643'
+default['cookbook_clarus']['ruby']['version'] = '2.1.10'
 
 default['cookbook_clarus']['solr']['version'] = '4.10.4'
 default['cookbook_clarus']['solr']['url'] = "http://mirrors.ukfast.co.uk/sites/ftp.apache.org/lucene/solr/#{node['cookbook_clarus']['solr']['version']}/solr-#{node['cookbook_clarus']['solr']['version']}.tgz"
