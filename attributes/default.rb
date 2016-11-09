@@ -37,8 +37,6 @@ default['cookbook_clarus']['ftp_root'] = "/home/apps/#{node['cookbook_clarus']['
 default['cookbook_clarus']['pure-ftpd']['url'] = 'http://download.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.43.tar.gz'
 default['cookbook_clarus']['pure-ftpd']['version'] = '1.0.43'
 
-default['cookbook_clarus']['newrelic']['license_key'] = nil
-
 default['cookbook_clarus']['pusher']['secret'] = nil
 default['cookbook_clarus']['pusher']['key'] = nil
 
