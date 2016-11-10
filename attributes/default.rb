@@ -1,4 +1,6 @@
-default['postgresql']['version'] = '9.3'
+default['java']['install_flavor'] = 'oracle'
+default['java']['jdk_version'] = '8'
+default['java']['oracle']['accept_oracle_download_terms'] = true
 
 default['cookbook_clarus']['appname'] = 'clarus'
 default['cookbook_clarus']['hostname'] = 'localhost'
@@ -34,8 +36,6 @@ default['cookbook_clarus']['jetty']['log_dir'] = "/var/log/solr"
 default['cookbook_clarus']['ftp_root'] = "/home/apps/#{node['cookbook_clarus']['appname']}/current/storage"
 default['cookbook_clarus']['pure-ftpd']['url'] = 'http://download.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.43.tar.gz'
 default['cookbook_clarus']['pure-ftpd']['version'] = '1.0.43'
-
-default['cookbook_clarus']['newrelic']['license_key'] = nil
 
 default['cookbook_clarus']['pusher']['secret'] = nil
 default['cookbook_clarus']['pusher']['key'] = nil

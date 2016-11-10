@@ -50,6 +50,24 @@ template '/etc/pure-ftpd/ftp-auth-handler' do
   mode '0755'
 end
 
+systemd_unit "pure-ftpd-authd.service" do
+  enabled true
+  active true
+  content "[Unit]\nDescription=Pure-FTPd-Authd\nAfter=network.target\n\n[Service]\nExecStart=/usr/local/sbin/pure-authd -s /var/run/ftpd.sock -r /etc/pure-ftpd/ftp-auth-handler\nRestart=always\n\n[Install]\nWantedBy=multi-user.target"
+  action [:create]
+end
 
+systemd_unit "pure-ftpd.service" do
+  enabled true
+  active true
+  content "[Unit]\nDescription=Pure-FTPd\nAfter=network.target\n\n[Service]\nExecStart=/usr/local/sbin/pure-ftpd -lextauth:/var/run/ftpd.sock -p 50000:50400\nRestart=always\n\n[Install]\nWantedBy=multi-user.target"
+  action [:create]
+end
 
+systemd_unit "pure-ftpd-authd.service" do
+  action [:enable, :start]
+end
 
+systemd_unit "pure-ftpd.service" do
+  action [:enable, :start]
+end
