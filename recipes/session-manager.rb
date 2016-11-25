@@ -6,6 +6,9 @@ directory '/etc/clarus' do
   recursive true
 end
 
+if node['cookbook_clarus']['pusher']['key'] == nil && node['cookbook_clarus']['pusher']['secret'] == nil
+  node['cookbook_clarus']['pusher'] = data_bag_item('pusher', node['cookbook_clarus']['appname']); 
+
 template '/etc/clarus/session-manager' do
   source 'session-manager.erb'
   owner 'root'
