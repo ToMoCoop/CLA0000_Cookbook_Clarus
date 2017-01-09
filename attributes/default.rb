@@ -13,7 +13,7 @@ default['cookbook_clarus']['symlink_jshintrc'] = false
 
 default['cookbook_clarus']['nginx_config'] = {};
 
-default['cookbook_clarus']['ruby']['version'] = '2.1.10'
+default['cookbook_clarus']['ruby']['version'] = '2.3.0'
 
 default['cookbook_clarus']['ftp_root'] = "/home/apps/#{node['cookbook_clarus']['appname']}/current/storage"
 default['cookbook_clarus']['pure-ftpd']['url'] = 'http://download.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.43.tar.gz'
