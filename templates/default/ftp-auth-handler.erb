@@ -10,8 +10,8 @@ include BCrypt
 
 subdomain, email = ENV['AUTHD_ACCOUNT'].split('-', 2)
 
-res = conn.exec_params("SELECT u.encrypted_password, u.id FROM users u LEFT JOIN account_users au ON au.user_id = u.id
-LEFT JOIN accounts a ON au.account_id = a.id WHERE a.subdomain LIKE $1 AND u.email LIKE $2", [subdomain, email] )
+res = conn.exec_params("SELECT u.encrypted_password, u.id FROM users u LEFT JOIN subdomain_users su ON su.user_id = u.id
+LEFT JOIN subdomains s ON su.subdomain_id = s.id WHERE s.subdomain LIKE $1 AND u.email LIKE $2", [subdomain, email] )
 
 encrypted_password = res.getvalue(0,0)
 user_id = res.getvalue(0,1)
