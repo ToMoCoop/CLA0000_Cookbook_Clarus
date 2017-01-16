@@ -7,7 +7,7 @@ directory '/etc/clarus' do
 end
 
 if node['cookbook_clarus']['pusher']['key'] == nil && node['cookbook_clarus']['pusher']['secret'] == nil
-  node['cookbook_clarus']['pusher'] = data_bag_item('pusher', node['cookbook_clarus']['appname'])
+  node.set['cookbook_clarus']['pusher'] = data_bag_item('pusher', node['cookbook_clarus']['appname'])
 end
 
 template '/etc/clarus/session-manager' do
