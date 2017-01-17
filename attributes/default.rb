@@ -10,16 +10,11 @@ default['cookbook_clarus']['database']['password'] = ''
 default['cookbook_clarus']['symlink_node_modules'] = false
 default['cookbook_clarus']['symlink_tmp'] = false
 default['cookbook_clarus']['symlink_jshintrc'] = false
-
-default['cookbook_clarus']['nginx_config'] = {};
-
-default['cookbook_clarus']['ruby']['version'] = '2.3.0'
-
+default['cookbook_clarus']['nginx_config'] = {}
+default['cookbook_clarus']['ruby']['version'] = '2.3.3'
 default['cookbook_clarus']['ftp_root'] = "/home/apps/#{node['cookbook_clarus']['appname']}/current/storage"
 default['cookbook_clarus']['pure-ftpd']['url'] = 'http://download.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.43.tar.gz'
 default['cookbook_clarus']['pure-ftpd']['version'] = '1.0.43'
-
 default['cookbook_clarus']['pusher']['secret'] = nil
 default['cookbook_clarus']['pusher']['key'] = nil
-
 default['build-essential']['compile_time'] = true
