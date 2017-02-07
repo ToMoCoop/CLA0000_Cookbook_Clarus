@@ -35,14 +35,6 @@ directory '/etc/pure-ftpd' do
   recursive true
 end
 
-directory '/home/apps/'+node['cookbook_clarus']['appname']+'/current/public/uploads' do
-  owner 'root'
-  group 'root'
-  mode '0755'
-  action :create
-  recursive true
-end
-
 template '/etc/pure-ftpd/ftp-auth-handler' do
   source 'ftp-auth-handler.erb'
   owner 'root'
