@@ -8,11 +8,6 @@ gem_package "bcrypt" do
   action :install
 end
 
-# Ftp services need pusher-client system wide.
-gem_package "pusher-client" do
-  action :install
-end
-
 remote_file "/tmp/pure-ftpd-#{node['cookbook_clarus']['pure-ftpd']['version']}.tar.gz" do
   source node['cookbook_clarus']['pure-ftpd']['url']
 end
