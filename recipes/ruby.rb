@@ -7,12 +7,10 @@
 
 rb_version = node['cookbook_clarus']['ruby']['version']
 
-include_recipe 'rbenv::default'
-include_recipe 'rbenv::ruby_build'
+rbenv_system_install 'foo'
+rbenv_ruby rb_version
+rbenv_global rb_version
 
-rbenv_ruby rb_version do
-  global(true)
-end
 rbenv_gem 'bundler' do
-  ruby_version rb_version
+  rbenv_version rb_version
 end
