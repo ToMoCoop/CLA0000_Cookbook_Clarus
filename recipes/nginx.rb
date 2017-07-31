@@ -8,4 +8,4 @@ node.set['nginx']['source']['checksum'] = '1af2eb956910ed4b11aaf525a81bc37e13590
 node.set['nginx']['source']['version']  = node['nginx']['version']
 node.set['nginx']['source']['url']      = "http://nginx.org/download/nginx-#{node['nginx']['source']['version']}.tar.gz"
 
-include_recipe 'nginx::source'
+include_recipe 'chef_nginx::source'
