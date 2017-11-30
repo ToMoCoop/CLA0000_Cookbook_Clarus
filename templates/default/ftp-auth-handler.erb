@@ -38,10 +38,9 @@ end
 
 if encrypted_password == authd_password
   target_dir = "<%= node['cookbook_clarus']['ftp_root']%>/<%= node['cookbook_clarus']['rails_env'] %>/#{user_id}/uploads/#{subdomain}"
-  unless Dir.exists?(target_dir)
-    FileUtils.mkdir_p target_dir
-    FileUtils.chown "<%= node['appbox']['deploy_user']%>", "<%= node['appbox']['apps_user']%>", target_dir
-  end
+  FileUtils.mkdir_p(target_dir) unless Dir.exists?(target_dir)
+  FileUtils.chown "<%= node['appbox']['deploy_user']%>", "<%= node['appbox']['apps_user']%>", target_dir
+
   puts 'auth_ok:1'
   puts 'uid:1002'
   puts 'gid:1002'
