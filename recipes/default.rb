@@ -6,7 +6,7 @@
 
 # Setting the version of the pg_gem as it recently broke.
 # See here https://github.com/sous-chefs/postgresql/issues/480
-default['postgresql']['pg_gem']['version'] = '0.21.0'
+node.set['postgresql']['pg_gem']['version'] = '0.21.0'
 
 
 include_recipe 'apt'
