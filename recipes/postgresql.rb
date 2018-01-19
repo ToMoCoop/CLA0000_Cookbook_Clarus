@@ -5,6 +5,10 @@
 # Install Postgresql and create specified databases and users, if required.
 #
 
+# Setting the version of the pg_gem as it recently broke.
+# See here https://github.com/sous-chefs/postgresql/issues/480
+node.set['postgresql']['pg_gem']['version'] = '0.21.0'
+
 install_db = node['cookbook_clarus']['install_db']
 if install_db
 
