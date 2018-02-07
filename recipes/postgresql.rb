@@ -55,18 +55,13 @@ if install_db
     recursive true
   end
 
-  template '.pgpass' do
-    source 'pgpass.erb'
-    path   lazy { "#{postgres_home}/.pgpass" }
-    owner  database['username']
-    group  database['username']
-    mode   '0600'
-    action :create
+  postgresql_database database['name'] do
+    owner database['username']
   end
 
-  execute 'Create the database as UTF-8' do
-    user database['username']
-    command "createdb -E UTF8 -T template0 --locale=en_US.utf8 --no-password --host=#{database['host']} #{database['name']}"
-  end
+end
 
+# Ftp services need PG system wide.
+postgresql_pg_gem 'install postgresql gem' do
+  ruby_binary '/usr/local/rbenv/shims/ruby'
 end
