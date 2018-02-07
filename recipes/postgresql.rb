@@ -27,8 +27,8 @@ if install_db
     access_type 'local'
     access_db 'all'
     access_user 'postgres'
-    access_method 'peer'
-    access_addr 'nil'
+    access_method 'ident'
+    access_addr ''
   end
 
   postgresql_access 'access3' do
