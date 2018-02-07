@@ -13,7 +13,6 @@ end
 # Get some key variables
 install_db = node['cookbook_clarus']['install_db']
 database = node['cookbook_clarus']['database']
-postgres_home = "/home/#{database['username']}/"
 
 # If we're installing a database on the server, we need the
 # postgres server, and then setup as applicable.
@@ -45,14 +44,6 @@ if install_db
     access_user 'all'
     access_addr '::1/128'
     access_method 'md5'
-  end
-
-  directory postgres_home do
-    mode "2775"
-    owner database['username']
-    group database['username']
-    action :create
-    recursive true
   end
 
   postgresql_database database['name'] do
