@@ -5,57 +5,68 @@
 # Install Postgresql and create specified databases and users, if required.
 #
 
+# Install the client for postgresql, as we always need this
+postgresql_client_install 'Install Postgresql Client' do
+
+end
+
+# Get some key variables
 install_db = node['cookbook_clarus']['install_db']
+database = node['cookbook_clarus']['database']
+postgres_home = "/home/#{database['username']}/"
+
+# If we're installing a database on the server, we need the
+# postgres server, and then setup as applicable.
 if install_db
 
-  root_password = node['cookbook_clarus']['db_root_password']
-  node.set['postgresql']['password']['postgres'] = root_password
+  postgresql_server_install 'Install Postgresql Server' do
+    password database['password']
+  end
 
-  include_recipe 'postgresql::server'
-  include_recipe 'database::postgresql'
+  postgresql_access 'access1' do
+    access_type 'local'
+    access_db 'all'
+    access_user 'postgres'
+    access_method 'peer'
+    access_addr 'nil'
+  end
 
-  node.set['postgresql']['pg_hba'] = [
-    {:type => 'local', :db => 'all', :user => 'postgres', :addr => nil, :method => 'ident'},
-    {:type => 'local', :db => 'all', :user => 'all', :addr => nil, :method => 'md5'},
-    {:type => 'host', :db => 'all', :user => 'all', :addr => '127.0.0.1/32', :method => 'md5'},
-    {:type => 'host', :db => 'all', :user => 'all', :addr => '::1/128', :method => 'md5'}
-  ]
+  postgresql_access 'access3' do
+    access_type 'host'
+    access_db 'all'
+    access_user 'all'
+    access_addr '127.0.0.1/32'
+    access_method 'md5'
+  end
 
-  postgresql_connection_info = {
-    :host => 'localhost',
-    :port => node['postgresql']['config']['port'],
-    :username => 'postgres',
-    :password => node['postgresql']['password']['postgres']
-  }
+  postgresql_access 'access4' do
+    access_type 'host'
+    access_db 'all'
+    access_user 'all'
+    access_addr '::1/128'
+    access_method 'md5'
+  end
 
-  postgresql_database node['cookbook_clarus']['database']['name'] do
-    connection postgresql_connection_info
-    template 'template0'
-    encoding 'UTF8'
-    collation 'en_US.utf8'
-    owner 'postgres'
+  directory postgres_home do
+    mode "2775"
+    owner database['username']
+    group database['username']
+    action :create
+    recursive true
+  end
+
+  template '.pgpass' do
+    source 'pgpass.erb'
+    path   lazy { "#{postgres_home}/.pgpass" }
+    owner  database['username']
+    group  database['username']
+    mode   '0600'
     action :create
   end
 
-  postgresql_database_user node['cookbook_clarus']['database']['username'] do
-    connection postgresql_connection_info
-    action [:create, :grant]
-    password(node['cookbook_clarus']['database']['password'])   if node['cookbook_clarus']['database']['password']
-    database_name(node['cookbook_clarus']['database']['name'])  if node['cookbook_clarus']['database']['name']
-  end
-
-  execute 'Psql template1 to UTF8' do
-    user 'postgres'
-    command <<-SQL
-echo "
-UPDATE pg_database SET datistemplate = FALSE WHERE datname = 'template1';
-DROP DATABASE template1;
-CREATE DATABASE template1 WITH TEMPLATE = template0 ENCODING = 'UNICODE' LC_CTYPE='en_US.utf8'      LC_COLLATE='en_US.utf8';
-UPDATE pg_database SET datistemplate = TRUE WHERE datname = 'template1';
-\\c template1
-VACUUM FREEZE;" | psql postgres -t
-    SQL
-# only_if '[ $(echo "select count(*) from pg_database where datname = \'template1\' and datcollate = \'en_US.utf8\'" |psql postgres -t) -eq 0 ]'
+  execute 'Create the database as UTF-8' do
+    user database['username']
+    command "createdb -E UTF8 -T template0 --locale=en_US.utf8 --no-password --host=#{database['host']} #{database['name']}"
   end
 
 end
