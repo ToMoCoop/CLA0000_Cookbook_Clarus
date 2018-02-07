@@ -22,7 +22,7 @@ if install_db
     password database['password']
   end
 
-  postgresql_access 'access1' do
+  postgresql_access 'Local access through ident' do
     access_type 'local'
     access_db 'all'
     access_user 'postgres'
@@ -30,7 +30,7 @@ if install_db
     access_addr ''
   end
 
-  postgresql_access 'access3' do
+  postgresql_access 'IP access though md5' do
     access_type 'host'
     access_db 'all'
     access_user 'all'
@@ -38,7 +38,7 @@ if install_db
     access_method 'md5'
   end
 
-  postgresql_access 'access4' do
+  postgresql_access 'Address access through md5' do
     access_type 'host'
     access_db 'all'
     access_user 'all'
