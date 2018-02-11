@@ -1,8 +1,3 @@
-# Ftp services need PG system wide.
-gem_package "pg" do
-  action :install
-end
-
 # Ftp services need bcrypt system wide.
 gem_package "bcrypt" do
   action :install
