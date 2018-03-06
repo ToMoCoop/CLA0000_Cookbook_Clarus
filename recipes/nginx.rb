@@ -16,6 +16,8 @@ hostname = node['cookbook_clarus']['hostname']
 listen_port = node['cookbook_clarus']['listen_port']
 upstream_host = node['cookbook_clarus']['upstream_host']
 upstream_port = node['cookbook_clarus']['upstream_port']
+ssl_key = node['cookbook_clarus']['ssl']['key']
+ssl_cert = node['cookbook_clarus']['ssl']['cert']
 nginx_dir = node['nginx']['dir']
 nginx_log_dir = node['nginx']['log_dir']
 
@@ -41,6 +43,8 @@ template nginx_vhost_location do
     :hostname    => hostname,
     :servers     => ["#{upstream_host}:#{upstream_port}"],
     :listen_port => listen_port,
+    :ssl_key     => ssl_key,
+    :ssl_cert    => ssl_cert,
     )
   notifies :reload, 'service[nginx]'
 end

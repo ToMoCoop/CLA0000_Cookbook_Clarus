@@ -5,7 +5,7 @@ debug = false
 
 require 'fileutils'
 require 'pg'
-conn = PG::Connection.new('<%= node['cookbook_clarus']['database']['host'] %>', 5432, nil, nil, '<%= node['cookbook_clarus']['database']['name'] %>', 'postgres', '<%= node['cookbook_clarus']['db_root_password'] %>')
+conn = PG::Connection.new('<%= node['cookbook_clarus']['database']['host'] %>', 5432, nil, nil, '<%= node['cookbook_clarus']['database']['name'] %>', 'postgres', '<%= node['cookbook_clarus']['database']['password'] %>')
 
 require 'bcrypt'
 include BCrypt
