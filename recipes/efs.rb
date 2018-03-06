@@ -33,6 +33,7 @@ end
 
 # If we have a File Storage ID for FTP, then mount EFS to it.
 if fsid
+  include_recipe 'nfs'
   mount_efs ftp_root do
     fsid fsid
     region region

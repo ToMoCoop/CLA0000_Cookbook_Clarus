@@ -4,7 +4,6 @@
 #
 
 include_recipe 'apt'
-include_recipe 'nfs'
 include_recipe 'imagemagick'
 include_recipe 'sqlite'
 include_recipe 'appbox'
