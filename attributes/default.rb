@@ -1,5 +1,8 @@
 default['cookbook_clarus']['appname'] = 'clarus'
 default['cookbook_clarus']['hostname'] = 'localhost'
+default['cookbook_clarus']['listen_port'] = 80
+default['cookbook_clarus']['upstream_host'] = 'localhost'
+default['cookbook_clarus']['upstream_port'] = 20001
 default['cookbook_clarus']['rails_env'] = 'production'
 default['cookbook_clarus']['install_db'] = true
 default['cookbook_clarus']['database']['host'] = 'localhost'
