@@ -7,13 +7,12 @@ fsid = node['cookbook_clarus']['efs']['fsid']
 region = node['cookbook_clarus']['efs']['region']
 shared_root = node['cookbook_clarus']['shared_root']
 ftp_root = node['cookbook_clarus']['ftp_root']
-apps_user = node['appbox']['apps_user']
 deploy_user = node['appbox']['deploy_user']
 
 # Create the base location for the shared files
 directory shared_root do
   owner deploy_user
-  group apps_user
+  group deploy_user
   mode '0755'
   action :create
   recursive true
@@ -25,7 +24,7 @@ end
 # performing a recursive directory creation.
 directory ftp_root do
   owner deploy_user
-  group apps_user
+  group deploy_user
   mode '0755'
   action :create
   recursive true

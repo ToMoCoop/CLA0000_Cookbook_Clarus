@@ -10,14 +10,14 @@ appname = node['cookbook_clarus']['appname']
 rails_env = node['cookbook_clarus']['rails_env']
 upstream_host = node['cookbook_clarus']['upstream_host']
 upstream_port = node['cookbook_clarus']['upstream_port']
-apps_user = node['appbox']['apps_user']
-apps_group = node['appbox']['apps_user']
+deploy_user = node['appbox']['deploy_user']
+deploy_group = node['appbox']['deploy_user']
 
 # Calculate some variables based on what we know.
 rails_app_dir = ::File.join(node['appbox']['apps_dir'], appname)
 rails_current_dir = ::File.join(rails_app_dir, 'current')
-passenger_log_file = File.join(rails_app_dir, 'log', 'passenger.log')
-passenger_pid_file = File.join(rails_app_dir, 'log', 'passenger.pid')
+passenger_log_file = File.join(rails_current_dir, 'log', 'passenger.log')
+passenger_pid_file = File.join(rails_current_dir, 'log', 'passenger.pid')
 
 # Create the passenger service using runit
 runit_service appname do
@@ -25,8 +25,8 @@ runit_service appname do
   log_template_name  'passenger'
   cookbook           'cookbook_clarus'
   options(
-    :user              => apps_user,
-    :group             => apps_group,
+    :user              => deploy_user,
+    :group             => deploy_group,
     :environment       => rails_env,
     :working_directory => rails_current_dir,
     :host              => upstream_host,
