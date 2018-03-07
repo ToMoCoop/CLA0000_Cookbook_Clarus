@@ -1,4 +1,4 @@
-#!/usr/bin/env /opt/rbenv/shims/ruby
+#!/usr/bin/env /usr/local/rbenv/shims/ruby
 
 require 'fileutils'
 require 'pg'
@@ -14,6 +14,7 @@ appname = '<%= node['cookbook_clarus']['appname'] %>'
 log_file = ::File.join(apps_dir, appname, 'shared', 'log', 'ftp.log')
 
 open(log_file, 'a') do |f|
+  f.puts "FTP Login attempted"
   f.puts "Subdomain: #{subdomain}"
   f.puts "Email: #{email}"
 end
@@ -38,11 +39,20 @@ if encrypted_password == authd_password
   FileUtils.mkdir_p(target_dir) unless Dir.exists?(target_dir)
   FileUtils.chown "<%= node['appbox']['deploy_user']%>", "<%= node['appbox']['deploy_user']%>", target_dir
 
+  open(log_file, 'a') do |f|
+    f.puts "FTP Login Successful"
+  end
+
   puts 'auth_ok:1'
   puts 'uid:1002'
   puts 'gid:1002'
   puts 'dir:' + "#{target_dir}/./"
 else
+
+  open(log_file, 'a') do |f|
+    f.puts "FTP Login Failed"
+  end
+
   puts 'auth_ok:0'
 end
 
