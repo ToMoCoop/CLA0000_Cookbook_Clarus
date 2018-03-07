@@ -1,8 +1,5 @@
 #!/usr/bin/env /opt/rbenv/shims/ruby
 
-# Enable Debugging to File
-debug = false
-
 require 'fileutils'
 require 'pg'
 conn = PG::Connection.new('<%= node['cookbook_clarus']['database']['host'] %>', 5432, nil, nil, '<%= node['cookbook_clarus']['database']['name'] %>', 'postgres', '<%= node['cookbook_clarus']['database']['password'] %>')
@@ -12,11 +9,13 @@ include BCrypt
 
 subdomain, email = ENV['AUTHD_ACCOUNT'].split('-', 2)
 
-if debug
-  open('/etc/pure-ftpd/log.log', 'a') do |f|
-    f.puts "Subdomain: #{subdomain}"
-    f.puts "Email: #{email}"
-  end
+apps_dir = '<%= node['appbox']['apps_dir'] %>'
+appname = '<%= node['cookbook_clarus']['appname'] %>'
+log_file = ::File.join(apps_dir, appname, 'shared', 'log', 'ftp.log')
+
+open(log_file, 'a') do |f|
+  f.puts "Subdomain: #{subdomain}"
+  f.puts "Email: #{email}"
 end
 
 res = conn.exec_params("SELECT u.encrypted_password, u.id FROM users u LEFT JOIN subdomain_users su ON su.user_id = u.id
@@ -28,12 +27,10 @@ user_id = res.getvalue(0,1)
 salt = encrypted_password[0...29]
 authd_password = BCrypt::Engine.hash_secret(ENV['AUTHD_PASSWORD'], salt)
 
-if debug
-  open('/etc/pure-ftpd/log.log', 'a') do |f|
-    f.puts "Salt: #{salt}"
-    f.puts "Encrypted: #{encrypted_password}"
-    f.puts "Password: #{authd_password}"
-  end
+open(log_file, 'a') do |f|
+  f.puts "Salt: #{salt}"
+  f.puts "Encrypted: #{encrypted_password}"
+  f.puts "Password: #{authd_password}"
 end
 
 if encrypted_password == authd_password
