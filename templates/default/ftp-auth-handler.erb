@@ -1,22 +1,22 @@
-#!/usr/bin/env /opt/rbenv/shims/ruby
-
-# Enable Debugging to File
-debug = false
+#!/usr/bin/env /usr/local/rbenv/shims/ruby
 
 require 'fileutils'
 require 'pg'
-conn = PG::Connection.new('<%= node['cookbook_clarus']['database']['host'] %>', 5432, nil, nil, '<%= node['cookbook_clarus']['database']['name'] %>', 'postgres', '<%= node['cookbook_clarus']['db_root_password'] %>')
+conn = PG::Connection.new('<%= node['cookbook_clarus']['database']['host'] %>', 5432, nil, nil, '<%= node['cookbook_clarus']['database']['name'] %>', 'postgres', '<%= node['cookbook_clarus']['database']['password'] %>')
 
 require 'bcrypt'
 include BCrypt
 
 subdomain, email = ENV['AUTHD_ACCOUNT'].split('-', 2)
 
-if debug
-  open('/etc/pure-ftpd/log.log', 'a') do |f|
-    f.puts "Subdomain: #{subdomain}"
-    f.puts "Email: #{email}"
-  end
+apps_dir = '<%= node['appbox']['apps_dir'] %>'
+appname = '<%= node['cookbook_clarus']['appname'] %>'
+log_file = ::File.join(apps_dir, appname, 'shared', 'log', 'ftp.log')
+
+open(log_file, 'a') do |f|
+  f.puts "FTP Login attempted"
+  f.puts "Subdomain: #{subdomain}"
+  f.puts "Email: #{email}"
 end
 
 res = conn.exec_params("SELECT u.encrypted_password, u.id FROM users u LEFT JOIN subdomain_users su ON su.user_id = u.id
@@ -28,24 +28,31 @@ user_id = res.getvalue(0,1)
 salt = encrypted_password[0...29]
 authd_password = BCrypt::Engine.hash_secret(ENV['AUTHD_PASSWORD'], salt)
 
-if debug
-  open('/etc/pure-ftpd/log.log', 'a') do |f|
-    f.puts "Salt: #{salt}"
-    f.puts "Encrypted: #{encrypted_password}"
-    f.puts "Password: #{authd_password}"
-  end
+open(log_file, 'a') do |f|
+  f.puts "Salt: #{salt}"
+  f.puts "Encrypted: #{encrypted_password}"
+  f.puts "Password: #{authd_password}"
 end
 
 if encrypted_password == authd_password
   target_dir = "<%= node['cookbook_clarus']['ftp_root']%>/<%= node['cookbook_clarus']['rails_env'] %>/#{user_id}/uploads/#{subdomain}"
   FileUtils.mkdir_p(target_dir) unless Dir.exists?(target_dir)
-  FileUtils.chown "<%= node['appbox']['deploy_user']%>", "<%= node['appbox']['apps_user']%>", target_dir
+  FileUtils.chown "<%= node['appbox']['deploy_user']%>", "<%= node['appbox']['deploy_user']%>", target_dir
+
+  open(log_file, 'a') do |f|
+    f.puts "FTP Login Successful"
+  end
 
   puts 'auth_ok:1'
   puts 'uid:1002'
   puts 'gid:1002'
   puts 'dir:' + "#{target_dir}/./"
 else
+
+  open(log_file, 'a') do |f|
+    f.puts "FTP Login Failed"
+  end
+
   puts 'auth_ok:0'
 end
 

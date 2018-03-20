@@ -1,0 +1,20 @@
+#!/bin/bash --login
+
+cd <%= @options[:working_directory] %>
+
+export HOME=<%= @options[:working_directory] %>
+
+exec 2>&1
+exec <%= node[:runit][:chpst_bin] %> -u <%= @options[:user] %>:<%= @options[:group] %> \
+  <%= File.join('.', 'bin', 'passenger') %> start \
+    <%= @options[:working_directory] %> \
+    --address <%= @options[:host] %> \
+    --port <%= @options[:port] %> \
+    --environment <%= @options[:environment] %> \
+    --max-pool-size 6 \
+    --min-instances 1 \
+    --spawn-method smart-lv2 \
+    --log-file <%= @options[:log_file] %> \
+    --pid-file <%= @options[:pid_file] %>
+
+
