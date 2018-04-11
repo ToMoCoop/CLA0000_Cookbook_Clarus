@@ -21,5 +21,5 @@ default['cookbook_clarus']['app_root'] = "/home/apps/#{node['cookbook_clarus']['
 default['cookbook_clarus']['shared_root'] = "#{node['cookbook_clarus']['app_root']}/shared"
 default['cookbook_clarus']['ftp_root'] = "#{node['cookbook_clarus']['shared_root']}/storage"
 default['cookbook_clarus']['pure-ftpd']['url'] = 'http://download.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.47.tar.gz'
-default['cookbook_clarus']['pure-ftpd']['version'] = '1.0.44'
+default['cookbook_clarus']['pure-ftpd']['version'] = '1.0.47'
 default['build-essential']['compile_time'] = true
