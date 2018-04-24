@@ -1,0 +1,31 @@
+#!/usr/bin/env /usr/local/rbenv/shims/ruby
+
+require 'fileutils'
+
+apps_dir = '<%= node['appbox']['apps_dir'] %>'
+appname = '<%= node['cookbook_clarus']['appname'] %>'
+log_file = ::File.join(apps_dir, appname, 'shared', 'log', 'ftp.log')
+
+open(log_file, 'a') do |f|
+  f.puts "FTP File Upload: Attempting to add the following file to the queue:"
+  f.puts "#{ARGV[0]}"
+end
+
+require 'redis'
+require 'resque'
+require 'resque-scheduler'
+require 'resque/scheduler/server'
+require 'as-duration'
+
+redis_host = '<%= node['cookbook_clarus']['redis']['host'] %>'
+redis_port = <%= node['cookbook_clarus']['redis']['port'] %>
+
+$redis = Redis.new(host: redis_host, port: redis_port)
+Resque.redis = $redis
+
+Resque.enqueue_at_with_queue(:ftp, 30.seconds.from_now, 'DataImporter', ARGV[0])
+
+open(log_file, 'a') do |f|
+  f.puts "FTP File Upload: Successfully added the following uploaded file to the queue:"
+  f.puts "#{ARGV[0]}"
+end

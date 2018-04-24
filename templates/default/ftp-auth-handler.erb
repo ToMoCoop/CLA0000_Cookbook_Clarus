@@ -41,6 +41,7 @@ if encrypted_password == authd_password
 
   open(log_file, 'a') do |f|
     f.puts "FTP Login Successful"
+    f.puts "Attempting to access #{target_dir}"
   end
 
   puts 'auth_ok:1'
