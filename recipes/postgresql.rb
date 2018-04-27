@@ -51,8 +51,3 @@ if install_db
   end
 
 end
-
-# Ftp services need PG system wide.
-postgresql_pg_gem 'install postgresql gem' do
-  ruby_binary '/usr/local/rbenv/shims/ruby'
-end
