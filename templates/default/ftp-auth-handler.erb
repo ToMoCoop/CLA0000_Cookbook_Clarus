@@ -18,15 +18,16 @@ conn = PG::Connection.new('<%= node['cookbook_clarus']['database']['host'] %>', 
 open(log_file, 'a') do |f|
   f.puts "FTP Login attempted"
   f.puts "Subdomain: #{subdomain}"
-  f.puts "Email: #{email}"
+  f.puts "Username: #{username}"
 end
 
 conn.exec "SET search_path TO #{subdomain}"
 
-res = conn.exec_params("SELECT u.encrypted_password, u.id FROM ftp_users u WHERE u.username = $1", [username])
+res = conn.exec_params("SELECT u.encrypted_password, u.id FROM ftp_users u WHERE u.username = $1 AND u.active = true", [username])
 
 encrypted_password = res.getvalue(0,0)
 user_id = res.getvalue(0,1)
+direction = res.getvalue(0,2)
 
 salt = encrypted_password[0...29]
 authd_password = BCrypt::Engine.hash_secret(ENV['AUTHD_PASSWORD'], salt)
@@ -55,6 +56,12 @@ if encrypted_password == authd_password
   puts 'uid:1002'
   puts 'gid:1002'
   puts 'dir:' + "#{target_dir}/./"
+  case direction
+  when '0' # download
+    puts 'throttling_bandwidth_ul:0'
+  when '1' # upload
+    puts 'throttling_bandwidth_dl:0'
+  end
 else
 
   open(log_file, 'a') do |f|
