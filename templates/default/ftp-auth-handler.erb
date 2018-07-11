@@ -2,28 +2,32 @@
 
 require 'fileutils'
 require 'pg'
-conn = PG::Connection.new('<%= node['cookbook_clarus']['database']['host'] %>', 5432, nil, nil, '<%= node['cookbook_clarus']['database']['name'] %>', 'postgres', '<%= node['cookbook_clarus']['database']['password'] %>')
 
 require 'bcrypt'
 include BCrypt
 
-subdomain, email = ENV['AUTHD_ACCOUNT'].split('-', 2)
+subdomain, username = ENV['AUTHD_ACCOUNT'].split('-', 2)
+
 
 apps_dir = '<%= node['appbox']['apps_dir'] %>'
 appname = '<%= node['cookbook_clarus']['appname'] %>'
 log_file = ::File.join(apps_dir, appname, 'shared', 'log', 'ftp.log')
 
+conn = PG::Connection.new('<%= node['cookbook_clarus']['database']['host'] %>', 5432, nil, nil, '<%= node['cookbook_clarus']['database']['name'] %>', 'postgres', '<%= node['cookbook_clarus']['database']['password'] %>')
+
 open(log_file, 'a') do |f|
   f.puts "FTP Login attempted"
   f.puts "Subdomain: #{subdomain}"
-  f.puts "Email: #{email}"
+  f.puts "Username: #{username}"
 end
 
-res = conn.exec_params("SELECT u.encrypted_password, u.id FROM users u LEFT JOIN subdomain_users su ON su.user_id = u.id
-LEFT JOIN subdomains s ON su.subdomain_id = s.id WHERE s.subdomain LIKE $1 AND u.email LIKE $2", [subdomain, email] )
+conn.exec "SET search_path TO #{subdomain}"
+
+res = conn.exec_params("SELECT u.encrypted_password, u.id FROM ftp_users u WHERE u.username = $1 AND u.active = true", [username])
 
 encrypted_password = res.getvalue(0,0)
 user_id = res.getvalue(0,1)
+direction = res.getvalue(0,2)
 
 salt = encrypted_password[0...29]
 authd_password = BCrypt::Engine.hash_secret(ENV['AUTHD_PASSWORD'], salt)
@@ -35,11 +39,15 @@ open(log_file, 'a') do |f|
 end
 
 if encrypted_password == authd_password
-  target_dir = "<%= node['cookbook_clarus']['ftp_root']%>/<%= node['cookbook_clarus']['rails_env'] %>/#{user_id}/uploads/#{subdomain}"
-  FileUtils.mkdir_p(target_dir) unless Dir.exists?(target_dir)
-  FileUtils.chown "<%= node['appbox']['deploy_user']%>", "<%= node['appbox']['deploy_user']%>", target_dir
+  target_dir = "<%= node['cookbook_clarus']['ftp_root']%>/#{subdomain}/#{user_id}/"
 
   open(log_file, 'a') do |f|
+    unless Dir.exists? target_dir
+      f.puts "Directory '#{target_dir}' not found"
+    end
+
+    FileUtils.chown "<%= node['appbox']['deploy_user']%>", "<%= node['appbox']['deploy_user']%>", target_dir
+
     f.puts "FTP Login Successful"
     f.puts "Attempting to access #{target_dir}"
   end
@@ -48,6 +56,12 @@ if encrypted_password == authd_password
   puts 'uid:1002'
   puts 'gid:1002'
   puts 'dir:' + "#{target_dir}/./"
+  case direction
+  when '0' # download
+    puts 'throttling_bandwidth_ul:0'
+  when '1' # upload
+    puts 'throttling_bandwidth_dl:0'
+  end
 else
 
   open(log_file, 'a') do |f|
