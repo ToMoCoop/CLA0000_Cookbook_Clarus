@@ -39,7 +39,7 @@ open(log_file, 'a') do |f|
 end
 
 if encrypted_password == authd_password
-  target_dir = "<%= node['cookbook_clarus']['ftp_root']%>/#{subdomain}/#{user_id}/"
+  target_dir = "<%= node['cookbook_clarus']['ftp_root']%>/#{subdomain}/#{user_id}"
 
   open(log_file, 'a') do |f|
     unless Dir.exists? target_dir
