@@ -23,7 +23,7 @@ end
 
 conn.exec "SET search_path TO #{subdomain}"
 
-res = conn.exec_params("SELECT u.encrypted_password, u.id FROM ftp_users u WHERE u.username = $1 AND u.active = true", [username])
+res = conn.exec_params("SELECT u.encrypted_password, u.id, u.direction FROM ftp_users u WHERE u.username = $1 AND u.active = true", [username])
 
 encrypted_password = res.getvalue(0,0)
 user_id = res.getvalue(0,1)
