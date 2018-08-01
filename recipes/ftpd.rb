@@ -42,7 +42,7 @@ bash 'Download Pure-FTPD' do
   code <<-EOH
     sudo tar -C /tmp -xzf /tmp/pure-ftpd-#{node['cookbook_clarus']['pure-ftpd']['version']}.tar.gz
     cd /tmp/pure-ftpd-#{node['cookbook_clarus']['pure-ftpd']['version']}
-    sudo ./configure --with-extauth --with-uploadscript
+    sudo ./configure --with-extauth --with-uploadscript --with-throttling
     sudo make
     sudo make install
   EOH
