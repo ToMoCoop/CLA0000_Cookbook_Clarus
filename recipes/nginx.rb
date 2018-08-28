@@ -3,10 +3,10 @@
 # Recipe:: nginx
 #
 
-node.set['nginx']['version'] = '1.12.1'
-node.set['nginx']['source']['checksum'] = '8793bf426485a30f91021b6b945a9fd8a84d87d17b566562c3797aba8fac76fb'
-node.set['nginx']['source']['version']  = node['nginx']['version']
-node.set['nginx']['source']['url']      = "http://nginx.org/download/nginx-#{node['nginx']['source']['version']}.tar.gz"
+node.override['nginx']['version'] = '1.12.1'
+node.override['nginx']['source']['checksum'] = '8793bf426485a30f91021b6b945a9fd8a84d87d17b566562c3797aba8fac76fb'
+node.override['nginx']['source']['version']  = node['nginx']['version']
+node.override['nginx']['source']['url']      = "http://nginx.org/download/nginx-#{node['nginx']['source']['version']}.tar.gz"
 
 include_recipe 'chef_nginx::source'
 
