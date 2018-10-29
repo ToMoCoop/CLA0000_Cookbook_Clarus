@@ -14,10 +14,10 @@ app_logs = ::File.join(apps_dir, appname, 'shared', 'log', '*.log')
 nginx_log_dir = node['nginx']['log_dir']
 
 if destination_host and destination_port
-  node.set['papertrail']['hostname'] = appname
-  node.set['papertrail']['destination_host'] = destination_host
-  node.set['papertrail']['destination_port'] = destination_port
-  node.set['papertrail']['files'] = [
+  node.override['papertrail']['hostname'] = appname
+  node.override['papertrail']['destination_host'] = destination_host
+  node.override['papertrail']['destination_port'] = destination_port
+  node.override['papertrail']['files'] = [
     app_logs,
     nginx_log_dir
   ]
