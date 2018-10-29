@@ -2,8 +2,6 @@
 
 cd <%= @options[:working_directory] %>
 
-export HOME=<%= @options[:working_directory] %>
-
 exec 2>&1
 exec <%= node[:runit][:chpst_bin] %> -u <%= @options[:user] %>:<%= @options[:group] %> \
   <%= File.join('.', 'bin', 'passenger') %> start \
